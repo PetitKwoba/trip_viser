@@ -70,6 +70,15 @@ python manage.py createsuperuser
 - Frontend: Vercel or Netlify (free)
 - See docs/DEPLOYMENT.md for step-by-step
 
+### Vercel (frontend) quick setup
+
+1. Import this repo in Vercel → select Root Directory: `frontend/`.
+2. Framework: Create React App (auto-detected). Node.js Version: 18.x.
+3. Build Command: `npm run build` • Output Directory: `build`.
+4. Env var: `REACT_APP_API_BASE=https://trip-viser.onrender.com/api/v1`.
+5. Deploy, then add your Vercel origin to backend `CORS_ALLOWED_ORIGINS` (Render).
+6. Optional: set `FRONTEND_URL` on the backend so GET `/` redirects to the UI.
+
 ### Render (backend) environment
 
 Set these environment variables in your Render Web Service:
