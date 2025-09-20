@@ -90,8 +90,18 @@ export async function getELDLogsByUsername(username, limit = 5, page, pageSize, 
 }
 
 // --- Auth helpers ---
-// Allow overriding the API base (e.g., point to live backend) via env var
-const API_BASE = process.env.REACT_APP_API_BASE || '';
+// API base resolution:
+// 1) If REACT_APP_API_BASE is provided, use it.
+// 2) Otherwise, when running locally on localhost/127.0.0.1, default to the Django dev server at 127.0.0.1:8000.
+// 3) Otherwise, leave blank and rely on reverse-proxy rewrites (e.g., Vercel vercel.json) or same-origin.
+const ENV_API_BASE = process.env.REACT_APP_API_BASE;
+let API_BASE = ENV_API_BASE || '';
+if (!API_BASE && typeof window !== 'undefined') {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') {
+    API_BASE = 'http://127.0.0.1:8000';
+  }
+}
 const withBase = (url) => (API_BASE && url.startsWith('/')) ? `${API_BASE}${url}` : url;
 let accessToken = (typeof window !== 'undefined' && window.localStorage) ? window.localStorage.getItem('accessToken') : null;
 export function setAccessToken(token) {

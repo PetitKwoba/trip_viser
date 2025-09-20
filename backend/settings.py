@@ -175,10 +175,22 @@ else:
 LEADERBOARD_CACHE_TTL = int(os.getenv('LEADERBOARD_CACHE_TTL', '120'))
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()
-]
+# In hosted environments, set CORS_ALLOWED_ORIGINS to the exact frontend origins (comma-separated)
+CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
+
+# Developer-friendly defaults: when DEBUG and no explicit CORS origins are provided,
+# allow common localhost origins to simplify local dev across ports.
+if DEBUG and not CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3001',
+    ]
+
+# CSRF trusted origins (mainly relevant if you enable cookie-based auth)
+CSRF_TRUSTED_ORIGINS = [o.replace('http://', 'http://').replace('https://', 'https://') for o in CORS_ALLOWED_ORIGINS]
 
 # Security headers (effective when DEBUG is False)
 if not DEBUG:
