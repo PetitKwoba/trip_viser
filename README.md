@@ -62,6 +62,18 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+### Seed demo users (23 total)
+
+Run this to create or ensure 3 supervisors and 20 drivers with password `Test@1234`:
+
+```powershell
+python manage.py seed_demo
+```
+
+Accounts created/ensured:
+- Supervisors: `supervisor1`, `supervisor2`, `supervisor3` (all staff+superuser, role=supervisor)
+- Drivers: `driver1` … `driver20` (role=driver)
+
 ## Docs
 - See docs/BACKEND.md, docs/FRONTEND.md, docs/DEPLOYMENT.md
 
