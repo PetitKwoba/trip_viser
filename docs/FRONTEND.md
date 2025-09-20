@@ -5,6 +5,9 @@
 - Uses react-router-dom, react-leaflet for map, and auth-aware API client
  - Mobile-responsive UI and navbar (hamburger on small screens)
 
+Demo video
+- Watch on Loom: https://www.loom.com/share/e47c6ea5b1014472a3d86b6fb52dc0aa?sid=106d0a04-3d3f-4da7-9bd9-5fd8d6590858
+
 ## Core screens
 - Login
 - Driver Dashboard: trip submission, ELD submission, daily timesheet print

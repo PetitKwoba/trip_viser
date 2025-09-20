@@ -371,6 +371,10 @@ function App() {
                               <a href="https://github.com/PetitKwoba/trip_viser" target="_blank" rel="noreferrer" style={{ color: '#1976d2', textDecoration: 'underline' }}>
                                 View source on GitHub
                               </a>
+                              <span style={{ margin: '0 0.5rem', color: '#aaa' }}>|</span>
+                              <a href="https://www.loom.com/share/e47c6ea5b1014472a3d86b6fb52dc0aa?sid=106d0a04-3d3f-4da7-9bd9-5fd8d6590858" target="_blank" rel="noreferrer" style={{ color: '#1976d2', textDecoration: 'underline' }}>
+                                Watch demo (Loom)
+                              </a>
                             </div>
                           </form>
                         </div>
