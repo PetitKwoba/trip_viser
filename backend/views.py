@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.middleware.csrf import get_token
 from django.http import HttpResponse
 from django.contrib.auth import authenticate
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
 from datetime import timedelta
@@ -17,6 +17,7 @@ from django.utils.html import escape
 from .models import User, Driver, Supervisor, Trip, ELDLog, ApprovalRequest
 from .serializers import UserSerializer, DriverSerializer, SupervisorSerializer, TripSerializer, ELDLogSerializer, ApprovalRequestSerializer
 from .permissions import IsSelfOrSupervisor, IsSupervisor, IsSupervisorSelf
+import os
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 25
@@ -543,6 +544,27 @@ def login_view(request):
 @permission_classes([permissions.AllowAny])
 def health(request):
     return Response({'status': 'ok'})
+
+
+# Root landing page: redirect to FRONTEND_URL if configured, else show helpful links
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def index(request):
+    frontend_url = getattr(settings, 'FRONTEND_URL', None) or os.environ.get('FRONTEND_URL')
+    if frontend_url:
+        return redirect(frontend_url)
+    html = (
+        "<html><head><title>Trip Viser</title></head><body>"
+        "<h2>Trip Viser API</h2>"
+        "<p>This is the backend service. Try these helpful links:</p>"
+        "<ul>"
+        "<li><a href='/api/health/'>/api/health/</a></li>"
+        "<li><a href='/api/schema/'>/api/schema/</a></li>"
+        "<li><a href='/admin/'>/admin/</a></li>"
+        "</ul>"
+        "</body></html>"
+    )
+    return HttpResponse(html, content_type='text/html; charset=utf-8')
 
 
 # Minimal admin page to assign drivers to supervisors (for demo/admin convenience)

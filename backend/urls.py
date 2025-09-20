@@ -12,6 +12,7 @@ from .views import (
     login_view,
     health,
     admin_assignments,
+    index,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -30,6 +31,8 @@ router.register(r'eldlogs', ELDLogViewSet)
 router.register(r'approvalrequests', ApprovalRequestViewSet)
 
 urlpatterns = [
+    # Root landing
+    path('', index, name='index'),
     # Health check
     path('api/health/', health, name='health'),
 
