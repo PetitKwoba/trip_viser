@@ -26,6 +26,20 @@ def seed_supervisors():
         user = User.objects.filter(username=username).first()
         if not user:
             user = User.objects.create_superuser(username=username, email=email, password='Test@1234')
+        else:
+            # Ensure demo supervisors have elevated flags
+            changed = False
+            if not user.is_staff:
+                user.is_staff = True
+                changed = True
+            if not user.is_superuser:
+                user.is_superuser = True
+                changed = True
+            if user.role != 'supervisor':
+                user.role = 'supervisor'
+                changed = True
+            if changed:
+                user.save(update_fields=['is_staff', 'is_superuser', 'role'])
         supervisor, _ = Supervisor.objects.get_or_create(
             user=user,
             defaults={
