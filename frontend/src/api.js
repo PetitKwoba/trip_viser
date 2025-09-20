@@ -90,6 +90,9 @@ export async function getELDLogsByUsername(username, limit = 5, page, pageSize, 
 }
 
 // --- Auth helpers ---
+// Allow overriding the API base (e.g., point to live backend) via env var
+const API_BASE = process.env.REACT_APP_API_BASE || '';
+const withBase = (url) => (API_BASE && url.startsWith('/')) ? `${API_BASE}${url}` : url;
 let accessToken = (typeof window !== 'undefined' && window.localStorage) ? window.localStorage.getItem('accessToken') : null;
 export function setAccessToken(token) {
   accessToken = token;
@@ -108,7 +111,7 @@ export async function refreshAccessToken() {
   try {
     const refresh = window.localStorage.getItem('refreshToken');
     if (!refresh) return false;
-    const doFetch = async () => fetch('/api/auth/token/refresh/', {
+    const doFetch = async () => fetch(withBase('/api/auth/token/refresh/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh })
@@ -144,20 +147,20 @@ export async function authorizedFetch(url, options = {}, retry = true) {
   const opts = { ...(options || {}) };
   const headers = { ...(opts.headers || {}), ...authHeaders() };
   opts.headers = headers;
-  const res = await fetch(url, opts);
+  const res = await fetch(withBase(url), opts);
   if (res.status !== 401 || !retry) return res;
   // Try refresh and retry once
   const refreshed = await refreshAccessToken();
   if (!refreshed) return res;
   const retryOpts = { ...(options || {}) };
   retryOpts.headers = { ...(retryOpts.headers || {}), ...authHeaders() };
-  return fetch(url, retryOpts);
+  return fetch(withBase(url), retryOpts);
 }
 
 // Obtain JWT token pair and store access token
 export async function obtainToken(username, password) {
   try {
-    const doFetch = async () => fetch('/api/auth/token/', {
+    const doFetch = async () => fetch(withBase('/api/auth/token/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -321,7 +324,7 @@ export async function getLeaderboard(username, limit = 5, period) {
 
 export async function loginUser(username, password) {
   try {
-    const res = await fetch('/api/auth/login/', {
+    const res = await fetch(withBase('/api/auth/login/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
