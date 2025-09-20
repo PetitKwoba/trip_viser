@@ -108,13 +108,27 @@ export async function refreshAccessToken() {
   try {
     const refresh = window.localStorage.getItem('refreshToken');
     if (!refresh) return false;
-    const res = await fetch('/api/auth/token/refresh/', {
+    const doFetch = async () => fetch('/api/auth/token/refresh/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh })
     });
-    if (!res.ok) return false;
-    const data = await res.json();
+    let res = await doFetch();
+    // Handle Render waking interstitial (non-JSON or 5xx)
+    let data;
+    try {
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      data = isJson ? await res.json() : null;
+    } catch {}
+    if (!res.ok || !data) {
+      await new Promise(r => setTimeout(r, 1500));
+      res = await doFetch();
+      try {
+        const isJson2 = res.headers.get('content-type')?.includes('application/json');
+        data = isJson2 ? await res.json() : null;
+      } catch {}
+      if (!res.ok || !data) return false;
+    }
     if (data?.access) {
       setAccessToken(data.access);
       return true;
@@ -143,13 +157,28 @@ export async function authorizedFetch(url, options = {}, retry = true) {
 // Obtain JWT token pair and store access token
 export async function obtainToken(username, password) {
   try {
-    const res = await fetch('/api/auth/token/', {
+    const doFetch = async () => fetch('/api/auth/token/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
     });
-    if (!res.ok) throw new Error('Failed to obtain token');
-    const data = await res.json(); // { access, refresh }
+    let res = await doFetch();
+    let data;
+    try {
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      data = isJson ? await res.json() : null;
+    } catch {}
+    if (!res.ok || !data) {
+      // Likely backend waking up; retry once after short delay
+      await new Promise(r => setTimeout(r, 1500));
+      res = await doFetch();
+      try {
+        const isJson2 = res.headers.get('content-type')?.includes('application/json');
+        data = isJson2 ? await res.json() : null;
+      } catch {}
+      if (!res.ok || !data) throw new Error('Failed to obtain token');
+    }
+    // { access, refresh }
     if (data?.access) setAccessToken(data.access);
     return data;
   } catch (err) {

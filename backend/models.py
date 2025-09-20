@@ -15,22 +15,23 @@ class UserManager(BaseUserManager):
         valid_roles = {choice[0] for choice in self.model.ROLE_CHOICES}
         if role not in valid_roles:
             role = 'driver'
+        # Respect explicit flags in extra_fields; otherwise set sensible defaults
+        extra_fields.setdefault('is_staff', role == 'supervisor')
+        extra_fields.setdefault('is_superuser', False)
         user = self.model(username=username, email=email, role=role, **extra_fields)
         user.set_password(password)
-        if role == 'supervisor':
-            # Supervisors are staff, but not superusers by default
-            user.is_staff = True
-            user.is_superuser = False
-        else:
-            user.is_staff = False
-            user.is_superuser = False
         user.save(using=self._db)
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
+        # Superusers must be staff and superuser; default role to supervisor for demo
         extra_fields.setdefault('role', 'supervisor')
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(username, email, password, **extra_fields)
 
 class User(AbstractUser):
