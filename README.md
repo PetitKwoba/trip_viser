@@ -75,7 +75,7 @@ python manage.py createsuperuser
 1. Import this repo in Vercel → select Root Directory: `frontend/`.
 2. Framework: Create React App (auto-detected). Node.js Version: 18.x.
 3. Build Command: `npm run build` • Output Directory: `build`.
-4. Env var: `REACT_APP_API_BASE=https://trip-viser.onrender.com/api/v1`.
+4. No env vars required: `frontend/vercel.json` includes a rewrite that proxies `/api/*` to the Render backend.
 5. Deploy, then add your Vercel origin to backend `CORS_ALLOWED_ORIGINS` (Render).
 6. Optional: set `FRONTEND_URL` on the backend so GET `/` redirects to the UI.
 
@@ -103,6 +103,16 @@ Root path behavior:
 
 - `GET /` serves a minimal landing page with links to `/api/health/`, `/api/schema/`, and `/admin/`.
 - If `FRONTEND_URL` is set, `GET /` redirects to that URL (recommended when frontend is hosted on Vercel/Netlify).
+
+### Seeding demo data on Render (no shell access)
+
+If you cannot access Render Shell, you can trigger seeding during deploys:
+
+1. In Render → Environment → add `SEED_DEMO=true` (temporarily).
+2. Redeploy. During build, the service will run `python backend/seed_sample_data.py` and create:
+	- 3 supervisors: `supervisor1..3` (password `Test@1234`)
+	- 20 drivers: `driver1..20` (password `Test@1234`)
+3. Remove `SEED_DEMO` or set it to `false` after seeding to avoid re-running on future deploys.
 
 ## License
 
