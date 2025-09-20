@@ -1,0 +1,11 @@
+# Normalize line endings
+* text=auto eol=lf
+
+# Keep images/binaries as-is
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.pdf binary

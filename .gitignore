@@ -1,0 +1,40 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+
+# Virtual envs
+.venv/
+venv/
+
+# Django
+db.sqlite3
+test_db.sqlite3
+staticfiles/
+media/
+
+# Env files (keep .env.sample committed)
+.env
+.env.*
+!.env.sample
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# Logs
+*.log
