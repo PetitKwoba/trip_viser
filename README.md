@@ -1,6 +1,6 @@
 # Trip Viser
 
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![CI](https://github.com/PetitKwoba/trip_viser/actions/workflows/ci.yml/badge.svg)](https://github.com/PetitKwoba/trip_viser/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Note: Replace OWNER/REPO in the CI badge URL after pushing to GitHub.
