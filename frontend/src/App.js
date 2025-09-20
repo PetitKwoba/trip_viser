@@ -339,9 +339,9 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', background: '#f6f8fa' }}>
       {loggedIn && <Navbar role={role} onLogout={handleLogout} />}
-      <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'calc(100vh - 64px)' }}>
-        <div style={{ width: '180px', background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '2em', letterSpacing: '2px' }}>Trip Viser</div>
-        <div style={{ flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'calc(100vh - 56px)' }}>
+        <div className="sidebar-brand" style={{ background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.6em', letterSpacing: '2px' }}>Trip Viser</div>
+        <div style={{ flex: 1 }} className="container">
           <Routes>
               {!loggedIn ? (
                 <>
@@ -367,6 +367,11 @@ function App() {
                               onChange={e => setPassword(e.target.value)}
                             />
                             <button style={buttonStyle} type="submit">Login</button>
+                            <div style={{ marginTop: '0.8rem', fontSize: '0.95rem' }}>
+                              <a href="https://github.com/PetitKwoba/trip_viser" target="_blank" rel="noreferrer" style={{ color: '#1976d2', textDecoration: 'underline' }}>
+                                View source on GitHub
+                              </a>
+                            </div>
                           </form>
                         </div>
                       </div>

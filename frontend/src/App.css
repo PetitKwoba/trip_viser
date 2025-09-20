@@ -28,6 +28,24 @@
   color: #61dafb;
 }
 
+/* Global layout helpers */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sidebar-brand {
+  width: 180px;
+}
+
+@media (max-width: 900px) {
+  .sidebar-brand {
+    display: none;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

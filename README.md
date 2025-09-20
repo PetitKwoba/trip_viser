@@ -8,12 +8,14 @@ Full-stack app for trip routing and ELD log visualization.
 - Backend: Django + DRF + SimpleJWT + Postgres
 - Frontend: React + react-router-dom + react-leaflet
 - Versioned API: /api/v1
+ - Mobile-friendly UI with responsive navbar and tables
 
 ## Features
 - Trip submission with route polyline
 - ELD log submission with accept/complete workflow
 - Supervisor approvals with scoping to assigned drivers
 - Map rendering, auto-refresh, tooltips, and printable daily sheet
+ - Responsive navigation (hamburger on small screens) and mobile-first layouts
 
 ## Quickstart (local)
 
@@ -35,6 +37,8 @@ Backend (env):
 
 Frontend (env):
 - REACT_APP_API_BASE
+	- When set, all frontend API calls are prefixed (e.g., https://trip-viser.onrender.com)
+	- A `.env.sample` is provided in `frontend/` and `.env.development.local` can be used for local dev
 
 ### Local dev tips (Windows PowerShell)
 
@@ -75,7 +79,7 @@ python manage.py createsuperuser
 1. Import this repo in Vercel → select Root Directory: `frontend/`.
 2. Framework: Create React App (auto-detected). Node.js Version: 18.x.
 3. Build Command: `npm run build` • Output Directory: `build`.
-4. No env vars required: `frontend/vercel.json` includes a rewrite that proxies `/api/*` to the Render backend.
+4. Env var optional: you can set `REACT_APP_API_BASE` to your backend URL, or rely on `frontend/vercel.json` rewrite which proxies `/api/*` to the backend.
 5. Deploy, then add your Vercel origin to backend `CORS_ALLOWED_ORIGINS` (Render).
 6. Optional: set `FRONTEND_URL` on the backend so GET `/` redirects to the UI.
 
@@ -113,6 +117,16 @@ If you cannot access Render Shell, you can trigger seeding during deploys:
 	- 3 supervisors: `supervisor1..3` (password `Test@1234`)
 	- 20 drivers: `driver1..20` (password `Test@1234`)
 3. Remove `SEED_DEMO` or set it to `false` after seeding to avoid re-running on future deploys.
+
+Notes:
+- The auth endpoints are available under both unversioned (`/api/auth/token/`) and versioned (`/api/v1/auth/token/`) paths for compatibility.
+- On cold starts (free tiers), the frontend retries token requests once to tolerate wake-up delays.
+
+## Screenshots
+- Supervisor Dashboard (mobile-friendly progress bar)
+- Driver Dashboard (cycle hours progress)
+- ELD Logs with map and route polyline
+
 
 ## License
 

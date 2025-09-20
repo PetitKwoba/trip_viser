@@ -77,8 +77,9 @@ export default function SupervisorDashboard({ role, username }) {
   const totalMileage = drivers.reduce((sum, d) => sum + (d.mileage || 0), 0);
   const totalCycleUsed = drivers.reduce((sum, d) => sum + (d.cycleUsed || 0), 0);
   const totalTripsToday = drivers.reduce((sum, d) => sum + (d.tripsToday || 0), 0);
-  const totalCycleLimit = 70;
-  const cycleProgress = Math.round((totalCycleUsed / totalCycleLimit) * 100);
+  const perDriverCycleLimit = 70;
+  const totalCycleLimit = perDriverCycleLimit * totalDrivers;
+  const cycleProgress = totalCycleLimit > 0 ? Math.round((totalCycleUsed / totalCycleLimit) * 100) : 0;
   return (
     <div className="dashboard-container" style={{maxWidth:'1200px',margin:'0 auto',padding:'2em 1em'}}>
       <h2 style={{fontWeight:'bold',fontSize:'2.2em',color:'#1976d2',marginBottom:'1.5em',letterSpacing:'1px'}}>Supervisor Dashboard</h2>
@@ -121,11 +122,22 @@ export default function SupervisorDashboard({ role, username }) {
       {/* Trip Progress Bar */}
       <div style={{marginBottom: '2rem'}}>
         <h4>Trip Progress (Cycle Hours)</h4>
-        <div style={{background: '#e0eafc', borderRadius: '8px', height: '32px', width: '100%', position: 'relative'}}>
-          <div style={{background: '#4f8cff', height: '100%', borderRadius: '8px', width: `${cycleProgress}%`, transition: 'width 0.3s'}}></div>
-          <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', color: '#333', fontWeight: 'bold'}}>{cycleProgress}%</div>
+        <div
+          className="progress"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={cycleProgress}
+          aria-label="Cycle hours used"
+        >
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${Math.max(0, Math.min(100, cycleProgress))}%` }} />
+          </div>
         </div>
-        <div style={{fontSize: '0.95rem', color: '#888', marginTop: '0.5rem'}}>Total Used: {totalCycleUsed} / {totalCycleLimit} hrs</div>
+        <div className="progress-meta">
+          <span className="progress-value">{cycleProgress}%</span>
+          <span className="progress-desc">Total Used: {totalCycleUsed} / {totalCycleLimit} hrs (70 × {totalDrivers} drivers)</span>
+        </div>
       </div>
       {/* Supervisor-only sections */}
       <div>

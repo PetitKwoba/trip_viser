@@ -34,7 +34,7 @@ Set DATABASE_URL for the backend:
 - Create a new Web Service in Render
 - Connect your Git repo
 - Build command: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
-- Start command: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+- Start command: python manage.py migrate --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
 - Environment:
   - SECRET_KEY: (generate a strong random string)
   - DEBUG: false
@@ -67,6 +67,7 @@ Static files
 - Output directory: frontend/build
 - Environment variables:
   - REACT_APP_API_BASE=https://your-backend-host
+  - Alternatively, rely on vercel.json rewrite for `/api/*` without setting this env
 
 Node version note:
 - Create React App v5 targets Node 14/16/18. For best compatibility with React 19 in CRA, pin Node 18 in Vercel project settings.
