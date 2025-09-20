@@ -13,7 +13,9 @@ services:
       if [ "$SEED_DEMO" = "true" ]; then
         python backend/seed_sample_data.py
       fi
-    startCommand: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: |
+      python manage.py migrate --noinput
+      gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
         generateValue: true
