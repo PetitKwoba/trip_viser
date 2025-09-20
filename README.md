@@ -123,9 +123,15 @@ Notes:
 - On cold starts (free tiers), the frontend retries token requests once to tolerate wake-up delays.
 
 ## Screenshots
-- Supervisor Dashboard (mobile-friendly progress bar)
-- Driver Dashboard (cycle hours progress)
-- ELD Logs with map and route polyline
+
+### Supervisor Dashboard
+![Supervisor Dashboard](docs/screenshots/supervisor%20dashboard.png)
+
+### Driver Dashboard
+![Driver Dashboard](docs/screenshots/driver%20dashboard.png)
+
+### ELD Logs (with map polyline)
+![ELD Logs](docs/screenshots/ELD%20logs.png)
 
 
 ## License

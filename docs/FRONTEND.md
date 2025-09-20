@@ -11,6 +11,17 @@
 - Supervisor Dashboard: pending approvals, driver selector, ELD logs by driver
 - ELD Logs page: pagination, auto-refresh, tooltips, map with decoded polyline
 
+### UI snapshots
+
+Supervisor Dashboard
+![Supervisor Dashboard](./screenshots/supervisor%20dashboard.png)
+
+Driver Dashboard
+![Driver Dashboard](./screenshots/driver%20dashboard.png)
+
+ELD Logs (Map & Polyline)
+![ELD Logs](./screenshots/ELD%20logs.png)
+
 ## API integration
 - Centralized api.js with token handling and refresh
 - Endpoints for trips submit, ELD submit/accept/complete, drivers list, approvals create/list
