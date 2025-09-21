@@ -10,6 +10,9 @@ Full-stack app for trip routing and ELD log visualization.
 - Versioned API: /api/v1
  - Mobile-friendly UI with responsive navbar and tables
 
+Demo video:
+- Watch on Loom: https://www.loom.com/share/e47c6ea5b1014472a3d86b6fb52dc0aa?sid=106d0a04-3d3f-4da7-9bd9-5fd8d6590858
+
 ## Features
 - Trip submission with route polyline
 - ELD log submission with accept/complete workflow
