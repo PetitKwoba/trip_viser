@@ -1,3 +1,9 @@
+databases:
+  - name: trip-viser-db
+    plan: free
+    databaseName: tripviser
+    user: tripviser
+
 services:
   - type: web
     name: trip-viser-backend
@@ -24,6 +30,8 @@ services:
       - key: ALLOWED_HOSTS
         value: "trip-viser.onrender.com"
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: trip-viser-db
+          property: connectionString
       - key: CORS_ALLOWED_ORIGINS
         value: "https://trip-viser.vercel.app"

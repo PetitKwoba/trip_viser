@@ -99,6 +99,10 @@ if any(arg in sys.argv for arg in ['test', 'pytest']) and not os.getenv('TEST_DA
 
 AUTH_USER_MODEL = 'backend.User'
 
+# Guard: avoid accidentally using SQLite in production
+if not DEBUG and DATABASES['default']['ENGINE'].endswith('sqlite3'):
+    raise RuntimeError('SQLite is not allowed when DEBUG=false. Configure DATABASE_URL or Postgres env vars.')
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
