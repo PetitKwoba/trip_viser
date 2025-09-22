@@ -99,6 +99,10 @@ if any(arg in sys.argv for arg in ['test', 'pytest']) and not os.getenv('TEST_DA
 
 AUTH_USER_MODEL = 'backend.User'
 
+# Guard: avoid accidentally using SQLite in production
+if not DEBUG and DATABASES['default']['ENGINE'].endswith('sqlite3'):
+    raise RuntimeError('SQLite is not allowed when DEBUG=false. Configure DATABASE_URL or Postgres env vars.')
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -175,10 +179,30 @@ else:
 LEADERBOARD_CACHE_TTL = int(os.getenv('LEADERBOARD_CACHE_TTL', '120'))
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()
-]
+from corsheaders.defaults import default_headers, default_methods
+# In hosted environments, set CORS_ALLOWED_ORIGINS to the exact frontend origins (comma-separated)
+CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'authorization',
+    'content-type',
+]
+CORS_ALLOW_METHODS = list(default_methods)
+
+# Developer-friendly defaults: when DEBUG, allow all origins to simplify local dev across ports.
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+    # For reference, these are common local origins (not required when allow-all is true)
+    if not CORS_ALLOWED_ORIGINS:
+        CORS_ALLOWED_ORIGINS = [
+            'http://localhost:3000',
+            'http://localhost:3001',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:3001',
+        ]
+
+# CSRF trusted origins (mainly relevant if you enable cookie-based auth)
+CSRF_TRUSTED_ORIGINS = [o.replace('http://', 'http://').replace('https://', 'https://') for o in CORS_ALLOWED_ORIGINS]
 
 # Security headers (effective when DEBUG is False)
 if not DEBUG:

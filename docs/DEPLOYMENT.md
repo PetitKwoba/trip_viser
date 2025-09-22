@@ -34,7 +34,7 @@ Set DATABASE_URL for the backend:
 - Create a new Web Service in Render
 - Connect your Git repo
 - Build command: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
-- Start command: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+- Start command: python manage.py migrate --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
 - Environment:
   - SECRET_KEY: (generate a strong random string)
   - DEBUG: false
@@ -43,11 +43,17 @@ Set DATABASE_URL for the backend:
   - CORS_ALLOWED_ORIGINS: https://your-frontend.vercel.app
 - Add a Render “Environment” of Python 3.13 if available, else system Python is fine
 
-Optional: render.yaml
-- You can use the provided render.yaml to one-click set up the service with build/start commands and env vars. In Render, choose “Blueprint” and point to this file.
+Optional: render.yaml (with auto-provisioned Postgres)
+- Use the provided `render.yaml` (Blueprint) to one-click set up both the web service and a free Render PostgreSQL instance.
+- The web service gets `DATABASE_URL` from the managed database automatically via `fromDatabase.connectionString`.
+- Build runs `collectstatic` and `migrate`; Start runs `migrate` and launches Gunicorn.
+- You can temporarily set `SEED_DEMO=true` in the service’s environment to seed 3 supervisors and 20 drivers during deploy. Remove it after seeding.
 
 Static files
 - Our settings include WhiteNoise to serve static files (collectstatic run is optional for APIs but safe to keep).
+
+Production safety guard
+- The Django settings now raise a clear error if SQLite is detected while `DEBUG=false`. This prevents accidental production boot on SQLite (which leads to missing tables when pods restart).
 
 
 ## 3) Backend (Django) on Fly.io (free allowances)
@@ -67,6 +73,7 @@ Static files
 - Output directory: frontend/build
 - Environment variables:
   - REACT_APP_API_BASE=https://your-backend-host
+  - Alternatively, rely on vercel.json rewrite for `/api/*` without setting this env
 
 Node version note:
 - Create React App v5 targets Node 14/16/18. For best compatibility with React 19 in CRA, pin Node 18 in Vercel project settings.
