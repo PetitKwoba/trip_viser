@@ -43,11 +43,17 @@ Set DATABASE_URL for the backend:
   - CORS_ALLOWED_ORIGINS: https://your-frontend.vercel.app
 - Add a Render “Environment” of Python 3.13 if available, else system Python is fine
 
-Optional: render.yaml
-- You can use the provided render.yaml to one-click set up the service with build/start commands and env vars. In Render, choose “Blueprint” and point to this file.
+Optional: render.yaml (with auto-provisioned Postgres)
+- Use the provided `render.yaml` (Blueprint) to one-click set up both the web service and a free Render PostgreSQL instance.
+- The web service gets `DATABASE_URL` from the managed database automatically via `fromDatabase.connectionString`.
+- Build runs `collectstatic` and `migrate`; Start runs `migrate` and launches Gunicorn.
+- You can temporarily set `SEED_DEMO=true` in the service’s environment to seed 3 supervisors and 20 drivers during deploy. Remove it after seeding.
 
 Static files
 - Our settings include WhiteNoise to serve static files (collectstatic run is optional for APIs but safe to keep).
+
+Production safety guard
+- The Django settings now raise a clear error if SQLite is detected while `DEBUG=false`. This prevents accidental production boot on SQLite (which leads to missing tables when pods restart).
 
 
 ## 3) Backend (Django) on Fly.io (free allowances)
