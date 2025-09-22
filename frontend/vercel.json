@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://trip-viser.onrender.com/api/$1"
+      "destination": "https://trip-viser-backend-ggww.onrender.com/api/$1"
     }
   ]
 }
