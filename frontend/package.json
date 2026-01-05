@@ -15,7 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "framer-motion": "^12.23.16",
     "html2canvas": "^1.4.1",
-    "jspdf": "^3.0.3",
+    "jspdf": "^4.0.0",
     "leaflet": "^1.9.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
